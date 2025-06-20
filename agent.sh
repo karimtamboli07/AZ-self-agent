@@ -9,7 +9,7 @@ TAR_URL="https://download.agent.dev.azure.com/agent/4.258.1/vsts-agent-linux-x64
 
 sudo apt-get update
 sudo apt-get install -y wget tar
-
+ 
 mkdir -p "$AGENT_DIR"
 cd "$AGENT_DIR"
 
