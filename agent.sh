@@ -1,4 +1,4 @@
-i#!/bin/bash
+#!/bin/bash
 
 ORG_URL="https://dev.azure.com/karimtamboli07gmailcom"
 AGENT_POOL="default"
@@ -15,26 +15,26 @@ cd "$AGENT_DIR"
 
 # === Download only if not already downloaded ===
 if [ ! -f agent.tar.gz ]; then
-  echo "⬇️ Downloading agent package..."
+  echo "Downloading agent "
   wget -O agent.tar.gz "$TAR_URL"
 else
-  echo "✅ agent.tar.gz already exists, skipping download."
+  echo "agent.tar.gz already exists"
 fi
 
 # === Extract only if not already extracted ===
 if [ ! -f config.sh ]; then
-  echo "📦 Extracting agent package..."
+  echo "Extract"
   tar zxvf agent.tar.gz
 else
-  echo "✅ Agent already extracted, skipping extraction."
+  echo "already extracte."
 fi
 
 iiwget -O agent.tar.gz "$TAR_URL"
 
 tar zxvf agent.tar.gz
-# === Remove existing config if already configured ===
-if [ -f .agent ]; then
-  echo "🧹 Removing existing agent configuration..."
+if [ -f .agent ]; 
+then
+  echo "Removing existing aconfiguration"
   ./config.sh remove
 fi
 ./config.sh --unattended \
