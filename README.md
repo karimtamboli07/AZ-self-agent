@@ -1,127 +1,103 @@
-# Az‑Self‑Host‑Agent‑Automate
+# 🤖 Azure DevOps Self-Hosted Agent Automation Script
 
-**Automate Azure DevOps self‑hosted agent deployment and configuration**
-
----
-
-## 🚀 Project Overview
-This project simplifies and automates the setup of Azure DevOps self‑hosted agents—via VM or Kubernetes—for CI/CD workflows. Ideal for teams requiring control, customization, or scale beyond Microsoft-hosted agents.
+This project provides a fully automated **Bash script** to install, configure, and run a self-hosted agent for Azure DevOps on a Linux machine.
 
 ---
 
-## 🔧 Tech Stack & Tools
-- Azure CLI / PowerShell
-- Terraform or ARM Templates (if used)
-- Kubernetes (optional) + Helm (when deploying agents in Kubernetes clusters)
-- Docker / Containerization (for containerized runners)
-- Scripted automation (Bash, PowerShell, etc.)
-- Integration with Azure Pipelines (agent pools & PAT/SPN)
+## 🚀 What This Script Does
+
+- Installs required dependencies (`wget`, `tar`)
+- Downloads the Azure DevOps agent binary
+- Extracts and configures the agent using a Personal Access Token (PAT)
+- Automatically registers the agent to your DevOps organization and starts it
 
 ---
 
-## 📦 Installation & Setup
+## 🧰 Prerequisites
 
-### Prerequisites:
-- Azure subscription & Azure DevOps organization
-- Azure CLI & Azure DevOps CLI extension
-- Terraform (optional, if infrastructure as code used)
-- Personal Access Token (PAT) or Service Principal credentials
-- Kubernetes cluster (optional, if deploying agents using k8s)
-
-### Step‑by‑Step Guide:
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/karimtamboli07/Az-self-host-agnet-Automate.git
-   cd Az-self-host-agnet-Automate
-   ```
-2. Authenticate Azure & DevOps:
-   ```bash
-   az login
-   az devops login --organization https://dev.azure.com/YourOrg
-   ```
-3. (Optional) Deploy infrastructure via Terraform or ARM templates:
-   ```bash
-   az group create –‑name <rg> –‑location <region>
-   terraform init
-   terraform apply
-   ```
-4. Run automation script to register agent:
-   ```bash
-   ./setup-agent.sh     # or PowerShell script
-   ```
-   Provide:
-   - Azure DevOps organization URL
-   - Agent pool name
-   - PAT or SPN credentials
-   - (Optional) Kubernetes or container config
-5. Verify agent registration in Azure DevOps portal under your agent pool.
+- Linux VM or machine (Ubuntu/Debian recommended)
+- Azure DevOps Organization
+- Personal Access Token (PAT) with at least:
+  - Agent Pools (Read & Manage)
+  - Deployment Group (if using deployment agents)
+- Bash shell
 
 ---
 
-## 🌟 Features
-- Automated provisioning of VMs or containers for agents  
-- Support for both PAT and Service Principal authentication  
-- Optionally deploy agent pods with Helm charts on Kubernetes  
-- Scalable CI/CD agent infrastructure for production usage  
-- Best practices for security and token rotation
+## ⚙️ How to Use
 
----
+### 1. Clone this repository or copy the script
 
-## 🧪 Usage Examples
-
-**Running agent setup:**
 ```bash
-./setup-agent.sh \
-  --org https://dev.azure.com/MyOrg \
-  --pool my-pool \
-  --token <YOUR_PAT> \
-  --k8s-enabled true
+git clone https://github.com/karimtamboli07/Az-self-host-agnet-Automate.git
+cd Az-self-host-agnet-Automate
 ```
 
-**Helm example (for Kubernetes agents):**
+### 2. Update `setup-agent.sh`
+
+Edit and set these variables in the script:
+
 ```bash
-helm install az-agents ./charts/az-selfhosted-agents \
-  --set linux.enabled=true \
-  --set windows.enabled=false \
-  --set dind.enabled=false \
-  --namespace az-agent
+ORG_URL="https://dev.azure.com/YOUR_ORG_NAME"
+AGENT_POOL="your-agent-pool"
+AGENT_NAME="my-selfhosted-agent"
+PAT="YOUR_PERSONAL_ACCESS_TOKEN"
+```
+
+> 💡 Never expose your PAT in a public repo!
+
+---
+
+### 3. Run the Script
+
+```bash
+chmod +x setup-agent.sh
+./setup-agent.sh
 ```
 
 ---
 
-## 🔒 Security & Best Practices
-- Rotate PATs regularly or use Azure SPN + AAD & Service Principal  
-- Restrict agent VM access to required users only  
-- For Kubernetes pods: use least-permission RBAC policies  
-- Keep agent runner software updated to latest stable version
+## 📂 Directory Structure
+
+```bash
+az-agent-automate/
+├── setup-agent.sh         # Main automation script
+└── agent/                 # Agent will be downloaded and extracted here
+```
 
 ---
 
-## 🎓 Demo / Documentation
-*Add your blog post, video tutorial, or official docs link here if available.*
+## 🛠 Script Logic Summary
+
+| Step | Description                               |
+|------|-------------------------------------------|
+| 1    | Install dependencies                      |
+| 2    | Download Azure DevOps agent tarball       |
+| 3    | Extract agent files                       |
+| 4    | Remove previous configuration if any      |
+| 5    | Register agent to Azure DevOps via PAT    |
+| 6    | Start the agent                           |
 
 ---
 
-## 🙋 Author & Contributors
-- **Karim Tamboli**  
-  GitHub: [karimtamboli07](https://github.com/karimtamboli07)
+## 🛡️ Security Best Practices
 
-Feel free to contribute via Issues or PRs—enhancements, bug fixes or additions of other agent types are welcome!
-
----
-
-## 📄 License
-Specify your license here (e.g., MIT, Apache‑2.0).
+- Do **NOT** commit the script with your PAT.
+- Use environment variables or secure vaults to store secrets.
+- Rotate your PATs regularly.
+- Consider switching to Service Principal authentication for enterprise use.
 
 ---
 
-## 📌 Quick Reference Table
+## 👨‍💻 Author
 
-| Step | Description                                     |
-|------|-------------------------------------------------|
-| 1    | Clone the repo                                  |
-| 2    | Authenticate with Azure & DevOps CLI            |
-| 3    | (Optional) Deploy infra via Terraform/ARM       |
-| 4    | Run agent registration automation script        |
-| 5    | (If Kubernetes) Use Helm chart to deploy pods   |
-| 6    | Verify agents are successfully added to pool     |
+**Karim Tamboli**  
+🔗 [GitHub Profile](https://github.com/karimtamboli07)
+
+---
+
+## 📌 Bonus (To-Do Ideas)
+
+- [ ] Create systemd service to run agent as background daemon
+- [ ] Add support for Docker-based agents
+- [ ] Helm chart for Kubernetes deployment
